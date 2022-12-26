@@ -3,6 +3,9 @@ package com.zzw.mydb.backend.tm;
 import com.zzw.mydb.backend.common.Error;
 import com.zzw.mydb.backend.utils.Panic;
 import com.zzw.mydb.backend.utils.Parser;
+import jdk.nashorn.internal.runtime.logging.Logger;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +14,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
+@Data
+@Slf4j
 public class TransactionManagerImpl implements TransactionManager{
     //XID文件头长度，用来保存该XID文件中事务个数
     static  final int LEN_XID_HEADER_LENGTH=8;
@@ -50,6 +54,7 @@ public class TransactionManagerImpl implements TransactionManager{
         } catch (IOException e) {
             Panic.panic(e);
         }
+        log.info("当前xid文件长度"+fileLen);
         //文件长度小于8
         if(fileLen<LEN_XID_HEADER_LENGTH){
             Panic.panic(Error.BadXidFileException);
@@ -63,6 +68,7 @@ public class TransactionManagerImpl implements TransactionManager{
             Panic.panic(e);
         }
         this.xidCounter= Parser.byte2Long(buf.array());
+        log.info("解析出的事务个数为"+xidCounter);
         long end= getXidPosition(xidCounter+1);
         if(fileLen!=end){
             Panic.panic(Error.BadXidFileException);
@@ -89,6 +95,7 @@ public class TransactionManagerImpl implements TransactionManager{
 
     //xid自增1,并同步到XID文件头
     private void incrXidCounter() {
+        this.xidCounter++;
         ByteBuffer buf=ByteBuffer.wrap(Parser.long2Byte(this.xidCounter));
         try{
             fc.position(0);
@@ -109,6 +116,7 @@ public class TransactionManagerImpl implements TransactionManager{
 
     private void updateXid(long xid, byte status) {
         long offset=getXidPosition(xid);
+        log.info("offset:"+offset);
         byte[] temp=new byte[XID_FIELD_SIZE];
         temp[0]=status;
         try {
