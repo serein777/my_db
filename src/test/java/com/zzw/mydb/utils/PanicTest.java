@@ -1,7 +1,7 @@
 package com.zzw.mydb.utils;
 
 import com.zzw.mydb.backend.utils.Panic;
-import com.zzw.mydb.backend.common.Error;
+import com.zzw.mydb.common.Error;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;

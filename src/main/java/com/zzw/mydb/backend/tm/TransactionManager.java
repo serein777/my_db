@@ -1,9 +1,8 @@
 package com.zzw.mydb.backend.tm;
 
-import com.zzw.mydb.backend.common.Error;
+import com.zzw.mydb.common.Error;
 import com.zzw.mydb.backend.utils.Panic;
 
-import javax.imageio.IIOException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;

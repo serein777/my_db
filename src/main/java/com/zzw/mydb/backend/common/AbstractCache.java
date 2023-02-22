@@ -1,5 +1,7 @@
 package com.zzw.mydb.backend.common;
 
+import com.zzw.mydb.common.Error;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +17,9 @@ public  abstract class AbstractCache<T>  {
     private int maxResource;               //最大缓存资源个数
     private int count;                     //当前缓存中资源个数
     ReentrantLock lock;
+    public AbstractCache(){
 
+    }
     public AbstractCache(int maxResource) {
         cache=new HashMap<>();
         references=new HashMap<>();
